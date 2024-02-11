@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import json
+from models.user import User  # Import the User class
 
 class FileStorage:
     """FileStorage class
@@ -10,7 +11,7 @@ class FileStorage:
 
     def __init__(self):
         """Initialize FileStorage"""
-        self.__file_path = 'file_path'
+        self.__file_path = 'file.json'  # Correct the file path
         self.__objects = {}
 
     def all(self):
@@ -24,9 +25,11 @@ class FileStorage:
 
     def save(self):
         """Serializes __objects to the JSON file (path: __file_path)"""
-        json_str = json.dumps(self.__objects, default=lambda o: o.__dict__, indent=4)
+        json_dict = {}
+        for key, obj in self.__objects.items():
+            json_dict[key] = obj.to_dict()  # Serialize each object to a dictionary
         with open(self.__file_path, 'w') as file:
-            file.write(json_str)
+            json.dump(json_dict, file, indent=4)  # Dump the dictionary to JSON
 
     def reload(self):
         """Deserializes the JSON file to __objects"""
@@ -35,9 +38,11 @@ class FileStorage:
                 data = json.load(file)
                 for key, value in data.items():
                     class_name, obj_id = key.split('.')
-                    module = __import__('models.' + class_name, fromlist=[class_name])
-                    cls = getattr(module, class_name)
-                    obj = cls(**value)
+                    if class_name == 'User':
+                        obj = User(**value)  # Deserialize User instances
+                    else:
+                        # Handle other classes similarly if needed
+                        pass
                     self.__objects[key] = obj
         except FileNotFoundError:
             pass

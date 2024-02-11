@@ -1,12 +1,7 @@
 #!/usr/bin/python3
 
-"""Console Module
-
-This module implements a command-line interface for interacting with an AirBnB clone.
-"""
-
 import cmd
-from models.base_model import BaseModel
+from models.user import User
 from models import storage
 
 class HBNBCommand(cmd.Cmd):
@@ -39,93 +34,85 @@ class HBNBCommand(cmd.Cmd):
         print("EOF command: Exits the program with Ctrl+D")
 
     def do_create(self, arg):
-        """Creates a new instance of BaseModel, saves it (to the JSON file), and prints the id."""
-        if not arg:
+        """Create a new instance of BaseModel"""
+        args = arg.split()
+        if len(args) < 1:
             print("** class name missing **")
             return
-        try:
-            obj = eval(arg)()
-            obj.save()
-            print(obj.id)
-        except NameError:
+        class_name = args[0]
+        if class_name not in ['User']:  # Add other class names here if needed
             print("** class doesn't exist **")
+            return
+        new_user = User()
+        new_user.save()
+        print(new_user.id)
 
     def do_show(self, arg):
-        """Prints the string representation of an instance based on the class name and id."""
-        if not arg:
-            print("** class name missing **")
-            return
+        """Show instance based on the class name and id"""
         args = arg.split()
-        if args[0] not in ["BaseModel"]:  # Add other model classes here
+        if len(args) < 2:
+            print("** class name missing **" if len(args) == 0 else "** instance id missing **")
+            return
+        class_name = args[0]
+        obj_id = args[1]
+        if class_name not in ['User']:  # Add other class names here if needed
             print("** class doesn't exist **")
             return
-        if len(args) < 2:
-            print("** instance id missing **")
-            return
-        objs = storage.all()
-        key = args[0] + "." + args[1]
-        if key in objs:
-            print(objs[key])
-        else:
+        key = "{}.{}".format(class_name, obj_id)
+        if key not in storage.all():
             print("** no instance found **")
+        else:
+            print(storage.all()[key])
 
     def do_destroy(self, arg):
-        """Deletes an instance based on the class name and id."""
-        if not arg:
-            print("** class name missing **")
-            return
+        """Destroy instance based on the class name and id"""
         args = arg.split()
-        if args[0] not in ["BaseModel"]:  # Add other model classes here
+        if len(args) < 2:
+            print("** class name missing **" if len(args) == 0 else "** instance id missing **")
+            return
+        class_name = args[0]
+        obj_id = args[1]
+        if class_name not in ['User']:  # Add other class names here if needed
             print("** class doesn't exist **")
             return
-        if len(args) < 2:
-            print("** instance id missing **")
-            return
-        objs = storage.all()
-        key = args[0] + "." + args[1]
-        if key in objs:
-            del objs[key]
-            storage.save()
-        else:
+        key = "{}.{}".format(class_name, obj_id)
+        if key not in storage.all():
             print("** no instance found **")
+        else:
+            del storage.all()[key]
+            storage.save()
 
     def do_all(self, arg):
-        """Prints all string representation of all instances based or not on the class name."""
-        objs = storage.all()
-        if not arg:
-            print([str(obj) for obj in objs.values()])
+        """Prints all string representation of all instances"""
+        args = arg.split()
+        if len(args) == 0:
+            print([str(obj) for obj in storage.all().values()])
+        elif args[0] not in ['User']:  # Add other class names here if needed
+            print("** class doesn't exist **")
         else:
-            args = arg.split()
-            if args[0] not in ["BaseModel"]:  # Add other model classes here
-                print("** class doesn't exist **")
-                return
-            print([str(obj) for obj in objs.values() if args[0] in str(obj)])
+            print([str(obj) for obj in storage.all().values() if type(obj).__name__ == args[0]])
 
     def do_update(self, arg):
-        """Updates an instance based on the class name and id by adding or updating attribute."""
-        if not arg:
-            print("** class name missing **")
-            return
+        """Update an instance based on the class name and id"""
         args = arg.split()
-        if args[0] not in ["BaseModel"]:  # Add other model classes here
+        if len(args) < 3:
+            print("** class name missing **" if len(args) == 0 else "** instance id missing **" if len(args) == 1 else "** attribute name missing **")
+            return
+        class_name = args[0]
+        obj_id = args[1]
+        if class_name not in ['User']:  # Add other class names here if needed
             print("** class doesn't exist **")
             return
-        if len(args) < 2:
-            print("** instance id missing **")
-            return
-        objs = storage.all()
-        key = args[0] + "." + args[1]
-        if key not in objs:
+        key = "{}.{}".format(class_name, obj_id)
+        if key not in storage.all():
             print("** no instance found **")
             return
-        if len(args) < 3:
-            print("** attribute name missing **")
-            return
+        attribute_name = args[2]
         if len(args) < 4:
             print("** value missing **")
             return
-        obj = objs[key]
-        setattr(obj, args[2], args[3])
+        value = args[3]
+        setattr(storage.all()[key], attribute_name, value)
         storage.save()
 
 if __name__ == '__main__':
