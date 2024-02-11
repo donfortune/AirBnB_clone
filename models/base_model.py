@@ -1,38 +1,39 @@
-#!/usr/bin/python3
-
-from uuid import uuid4
+import uuid
 from datetime import datetime
 import models
 
+
 class BaseModel:
-    """BaseModel class
-    
-    This class represents the base model for all other models in the application.
+    """
+    This class represents base model for all models in the application.
     """
 
     def __init__(self, *args, **kwargs):
         """Initialize BaseModel"""
-        if kwargs:  
+        if kwargs:
             if 'id' in kwargs:
                 self.id = kwargs['id']
             else:
-                self.id = str(uuid4())
+                self.id = str(uuid.uuid4())
             if 'created_at' in kwargs:
-                self.created_at = datetime.strptime(kwargs['created_at'], "%Y-%m-%dT%H:%M:%S.%f")
+                self.created_at = datetime.strptime(
+                    kwargs['created_at'], "%Y-%m-%dT%H:%M:%S.%f")
             else:
                 self.created_at = datetime.now()
             if 'updated_at' in kwargs:
-                self.updated_at = datetime.strptime(kwargs['updated_at'], "%Y-%m-%dT%H:%M:%S.%f")
+                self.updated_at = datetime.strptime(
+                    kwargs['updated_at'], "%Y-%m-%dT%H:%M:%S.%f")
             else:
                 self.updated_at = datetime.now()
         else:
-            self.id = str(uuid4())
+            self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
 
     def __str__(self):
         """Return string representation of BaseModel"""
-        return '[{}] ({}) {}'.format(type(self).__name__,self.id, self.__dict__)
+        attr_dict = {k: v for k, v in self.__dict__.items() if k not in ['id', 'created_at', 'updated_at']}
+        return '[{}] ({}) {}'.format(type(self).__name__, self.id, attr_dict)
 
     def save(self):
         """Save BaseModel instance"""
@@ -46,7 +47,3 @@ class BaseModel:
         obj_dict['created_at'] = self.created_at.isoformat()
         obj_dict['updated_at'] = self.updated_at.isoformat()
         return obj_dict
-
-if __name__ == '__main__':
-    pass  # Add any additional code for script execution here
-
