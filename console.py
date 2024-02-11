@@ -1,8 +1,18 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
+
+"""Console Module
+
+This module implements a command-line interface for interacting with an AirBnB clone.
+"""
+
 import cmd
 
-
 class HBNBCommand(cmd.Cmd):
+    """HBNBCommand class
+
+    Implements a command-line interpreter for the AirBnB clone.
+    """
+
     prompt = "(hbnb) "
 
     def do_quit(self, arg):
@@ -21,7 +31,7 @@ class HBNBCommand(cmd.Cmd):
     def help_quit(self):
         """Prints help message for the quit command"""
         print("Quit command: Exits the program")
-    
+
     def help_EOF(self):
         """Prints help message for the EOF command"""
         print("EOF command: Exits the program with Ctrl+D")
