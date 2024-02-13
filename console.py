@@ -2,6 +2,7 @@
 
 import cmd
 
+
 class HBNBCommand(cmd.Cmd):
     """HBNBCommand class
 
@@ -30,6 +31,7 @@ class HBNBCommand(cmd.Cmd):
     def help_EOF(self):
         """Prints help message for the EOF command"""
         print("EOF command: Exits the program with Ctrl+D")
+
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
