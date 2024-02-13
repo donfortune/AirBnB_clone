@@ -1,7 +1,9 @@
 #!/usr/bin/python3
 import cmd
 
+
 class HBNBCommand(cmd.Cmd):
+
     """HBNBCommand class
 
     Implements a command-line interpreter for the AirBnB clone.
@@ -29,10 +31,6 @@ class HBNBCommand(cmd.Cmd):
     def help_EOF(self):
         """Prints help message for the EOF command"""
         print("EOF command: Exits the program with Ctrl+D")
-
-
-
-
 
 
 if __name__ == '__main__':
