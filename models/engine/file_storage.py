@@ -38,10 +38,11 @@ class FileStorage:
                 data = json.load(file)
                 for key, value in data.items():
                     class_name, obj_id = key.split('.')
+                    obj = None
                     if class_name == 'User':
                         obj = User(**value)  # Deserialize User instances
                     else:
-                        obj = None
+                        pass
                     self.__objects[key] = obj
         except FileNotFoundError:
             pass
