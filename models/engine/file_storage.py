@@ -40,7 +40,10 @@ class FileStorage:
                     class_name, obj_id = key.split('.')
                     obj = None
                     if class_name == 'User':
-                        obj = User(**value)  # Deserialize User instances
+                        try:
+                            obj = User(**value)  # Deserialize User instances
+                        except Exception as e:
+                            print(f"Error deserializing user: {e}")
                     self.__objects[key] = obj
         except FileNotFoundError:
             return
