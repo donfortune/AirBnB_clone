@@ -4,6 +4,7 @@ import cmd
 from models.user import User
 from models import storage
 
+
 class HBNBCommand(cmd.Cmd):
     """HBNBCommand class
 
@@ -51,7 +52,7 @@ class HBNBCommand(cmd.Cmd):
         """Show instance based on the class name and id"""
         args = arg.split()
         if len(args) < 2:
-            print("** class name missing **" if len(args) == 0 else "** instance id missing **")
+            print("** mising**" if len(args) == 0 else "** instance **")
             return
         class_name = args[0]
         obj_id = args[1]
@@ -68,7 +69,7 @@ class HBNBCommand(cmd.Cmd):
         """Destroy instance based on the class name and id"""
         args = arg.split()
         if len(args) < 2:
-            print("** class name missing **" if len(args) == 0 else "** instance id missing **")
+            print("** class" if len(args) == 0 else "** id miss **")
             return
         class_name = args[0]
         obj_id = args[1]
@@ -86,17 +87,21 @@ class HBNBCommand(cmd.Cmd):
         """Prints all string representation of all instances"""
         args = arg.split()
         if len(args) == 0:
-            print([str(obj) for obj in storage.all().values()])
+            instances = storage.all().values()
+            print([str(obj) for obj in instances])
         elif args[0] not in ['User']:  # Add other class names here if needed
             print("** class doesn't exist **")
         else:
-            print([str(obj) for obj in storage.all().values() if type(obj).__name__ == args[0]])
+            instances = storage.all().values()
+            class_name = type(obj).__name__
+            print([str(obj) for obj in instances if class_name == args[0]])
 
     def do_update(self, arg):
         """Update an instance based on the class name and id"""
+
         args = arg.split()
         if len(args) < 3:
-            print("** class name missing **" if len(args) == 0 else "** instance id missing **" if len(args) == 1 else "** attribute name missing **")
+            print(" " if len(args) == 0 else "id" if len(args) == 1 else " ")
             return
         class_name = args[0]
         obj_id = args[1]
@@ -115,6 +120,6 @@ class HBNBCommand(cmd.Cmd):
         setattr(storage.all()[key], attribute_name, value)
         storage.save()
 
+
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
-
