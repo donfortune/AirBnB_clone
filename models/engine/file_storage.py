@@ -32,19 +32,16 @@ class FileStorage:
             json.dump(json_dict, file, indent=4)  # Dump the dictionary to JSON
 
     def reload(self):
-        """Deserializes the JSON file to __objects"""
+        """reloads"""
         try:
             with open(self.__file_path, 'r') as file:
                 data = json.load(file)
                 for key, value in data.items():
                     class_name, obj_id = key.split('.')
-                    obj = None
-                    if class_name == 'User':
-                        try:
-                            obj = User(**value)  # Deserialize User instances
-                        except Exception as e:
-                            print(f"Error deserializing user: {e}")
+                    module = __import__('models.' + class_name, fromlist=[class_name])
+                    cls = getattr(module, class_name)
+                    obj = cls(**value)
                     self.__objects[key] = obj
         except FileNotFoundError:
-            return
+            pass
 
