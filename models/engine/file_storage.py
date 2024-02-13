@@ -41,9 +41,7 @@ class FileStorage:
                     obj = None
                     if class_name == 'User':
                         obj = User(**value)  # Deserialize User instances
-                    else:
-                        pass
                     self.__objects[key] = obj
         except FileNotFoundError:
-            pass
+            return
 
