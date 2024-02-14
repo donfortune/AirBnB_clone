@@ -1,7 +1,9 @@
 #!/usr/bin/python3
 
 import json
-from models.user import User  # Import the User class
+from models.user import User
+from models.base_model import BaseModel
+
 
 class FileStorage:
     """FileStorage class
